@@ -69,7 +69,7 @@ export const Layout = () => {
   const loadNotifications = async () => {
     if (!user) return;
     try {
-      const { data } = await API.get("/api/notifications");
+      const { data } = await API.get("/notifications");
       setNotifications(data.notifications || []);
       setUnreadCount(Number(data.unreadCount || 0));
     } catch {
@@ -123,8 +123,8 @@ export const Layout = () => {
     const loadSearchSource = async () => {
       try {
         const [patientsResponse, ordersResponse] = await Promise.all([
-          API.get("/api/patients", { params: { page: 1, pageSize: 100 } }),
-          API.get("/api/orders", { params: { page: 1, pageSize: 100 } })
+          API.get("/patients", { params: { page: 1, pageSize: 100 } }),
+          API.get("/orders", { params: { page: 1, pageSize: 100 } })
         ]);
 
         const allPatients = (patientsResponse.data?.data ?? []) as GlobalSearchResults["patients"];
@@ -165,8 +165,8 @@ export const Layout = () => {
       try {
         const q = term.toLowerCase();
         const [patientsResponse, ordersResponse] = await Promise.all([
-          API.get("/api/patients", { params: { page: 1, pageSize: 100 } }),
-          API.get("/api/orders", { params: { page: 1, pageSize: 100 } })
+          API.get("/patients", { params: { page: 1, pageSize: 100 } }),
+          API.get("/orders", { params: { page: 1, pageSize: 100 } })
         ]);
 
         const allPatients = (patientsResponse.data?.data ?? []) as GlobalSearchResults["patients"];
@@ -226,7 +226,7 @@ export const Layout = () => {
 
   const markAllNotificationsRead = async () => {
     try {
-      await API.patch("/api/notifications/read-all");
+      await API.patch("/notifications/read-all");
       setNotifications((current) => current.map((item) => ({ ...item, isRead: true })));
       setUnreadCount(0);
     } catch {
@@ -385,7 +385,7 @@ export const Layout = () => {
                           onClick={async () => {
                             if (!notification.isRead) {
                               try {
-                                await API.patch(`/api/notifications/${notification.id}/read`);
+                                await API.patch(`/notifications/${notification.id}/read`);
                                 setNotifications((current) => current.map((item) => (item.id === notification.id ? { ...item, isRead: true } : item)));
                                 setUnreadCount((count) => Math.max(count - 1, 0));
                               } catch {

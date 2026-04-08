@@ -27,7 +27,7 @@ export const AddPatientPage = () => {
     setLoading(true);
 
     try {
-      await API.post("/api/patients", {
+      await API.post("/patients", {
         name,
         phone,
         age: Number(age),

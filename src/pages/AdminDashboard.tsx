@@ -17,8 +17,8 @@ export const AdminDashboard = () => {
     setLoading(true);
     try {
       const [summaryRes, usersRes] = await Promise.all([
-        API.get("/api/admin/summary"),
-        API.get("/api/admin/users")
+        API.get("/admin/summary"),
+        API.get("/admin/users")
       ]);
       setSummary(summaryRes.data);
       setUsers(usersRes.data);

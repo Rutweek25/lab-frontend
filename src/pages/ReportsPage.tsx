@@ -25,7 +25,7 @@ export const ReportsPage = () => {
     if (!id) return;
     setLoading(true);
     try {
-      const { data } = await API.get(`/api/reports/${id}`);
+      const { data } = await API.get(`/reports/${id}`);
       setReports(data);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch reports");
@@ -72,7 +72,7 @@ export const ReportsPage = () => {
 
     try {
       setUploading(true);
-      await API.post(`/api/reports/${orderId}`, formData, {
+      await API.post(`/reports/${orderId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       toast.success("Report uploaded");

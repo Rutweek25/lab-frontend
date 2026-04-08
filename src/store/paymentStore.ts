@@ -27,7 +27,7 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const { statusFilter, search } = get();
-      const { data } = await API.get("/api/payments", {
+      const { data } = await API.get("/payments", {
         params: {
           ...(statusFilter !== "ALL" ? { status: statusFilter } : {}),
           ...(search.trim() ? { search: search.trim() } : {})

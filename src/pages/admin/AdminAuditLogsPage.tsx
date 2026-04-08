@@ -14,7 +14,7 @@ export const AdminAuditLogsPage = () => {
   const fetchLogs = async (query = "") => {
     setLoading(true);
     try {
-      const { data } = await API.get("/api/admin/audit-logs", { params: query ? { search: query } : {} });
+      const { data } = await API.get("/admin/audit-logs", { params: query ? { search: query } : {} });
       setLogs(data);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to load audit logs");

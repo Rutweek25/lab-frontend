@@ -57,8 +57,8 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const [ordersRes, testsRes] = await Promise.all([
-        API.get("/api/orders", { params: { page: 1, pageSize: 100 } }),
-        API.get("/api/tests")
+        API.get("/orders", { params: { page: 1, pageSize: 100 } }),
+        API.get("/tests")
       ]);
 
       set({
@@ -78,7 +78,7 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
   updateOrderTests: async (orderId, testItems) => {
     set({ loading: true, error: null });
     try {
-      await API.put(`/api/orders/${orderId}/tests`, { testItems });
+      await API.put(`/orders/${orderId}/tests`, { testItems });
       await get().fetchLabData();
       set({ loading: false });
     } catch (error: any) {
@@ -93,7 +93,7 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
   deleteOrder: async (orderId) => {
     set({ loading: true, error: null });
     try {
-      await API.delete(`/api/orders/${orderId}`);
+      await API.delete(`/orders/${orderId}`);
       await get().fetchLabData();
       set({ loading: false });
     } catch (error: any) {
@@ -108,7 +108,7 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
   updateOrderStatus: async (orderId, status) => {
     set({ loading: true, error: null });
     try {
-      await API.put(`/api/orders/${orderId}/status`, { status });
+      await API.put(`/orders/${orderId}/status`, { status });
       await get().fetchLabData();
       set({ loading: false });
     } catch (error: any) {
@@ -123,7 +123,7 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
   updateOrderSampleStatus: async (orderId, sampleStatus) => {
     set({ loading: true, error: null });
     try {
-      await API.put(`/api/orders/${orderId}/sample-status`, { sampleStatus });
+      await API.put(`/orders/${orderId}/sample-status`, { sampleStatus });
       await get().fetchLabData();
       set({ loading: false });
     } catch (error: any) {
@@ -138,7 +138,7 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
   updatePaymentStatus: async (orderId, status) => {
     set({ loading: true, error: null });
     try {
-      await API.put(`/api/payments/${orderId}`, { status });
+      await API.put(`/payments/${orderId}`, { status });
 
       set((state) => ({
         loading: true,
@@ -184,7 +184,7 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
       formData.append("orderId", String(orderId));
       formData.append("report", file);
 
-      await API.post("/api/reports", formData, {
+      await API.post("/reports", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
 
@@ -202,7 +202,7 @@ export const useLabTechnicianStore = create<LabTechnicianState>((set, get) => ({
   updateReportStatus: async (reportId, status) => {
     set({ loading: true, error: null });
     try {
-      await API.patch(`/api/reports/${reportId}/status`, { status });
+      await API.patch(`/reports/${reportId}/status`, { status });
       await get().fetchLabData();
       set({ loading: false });
     } catch (error: any) {
