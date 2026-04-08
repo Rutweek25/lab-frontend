@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { api } from "../../lib/api";
+import API from "../../api/axios";
 import { Loader } from "../../components/Loader";
 import { PageHeader } from "../../components/PageHeader";
 import { EmptyState } from "../../components/EmptyState";
@@ -14,7 +14,7 @@ export const AdminAuditLogsPage = () => {
   const fetchLogs = async (query = "") => {
     setLoading(true);
     try {
-      const { data } = await api.get("/admin/audit-logs", { params: query ? { search: query } : {} });
+      const { data } = await API.get("/api/admin/audit-logs", { params: query ? { search: query } : {} });
       setLogs(data);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to load audit logs");

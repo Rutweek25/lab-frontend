@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { api } from "../lib/api";
+import API from "../api/axios";
 import type {
   AdminDashboardAnalytics,
   AdminPaymentRow,
@@ -67,7 +67,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchDashboard: async () => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get("/admin/dashboard");
+      const { data } = await API.get("/api/admin/dashboard");
       set({ analytics: data, loading: false });
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to load dashboard" });
@@ -78,7 +78,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchUsers: async () => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get("/admin/users");
+      const { data } = await API.get("/api/admin/users");
       set({ users: data, loading: false });
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to load users" });
@@ -89,7 +89,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   createUser: async (payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.post("/admin/users", payload);
+      const { data } = await API.post("/api/admin/users", payload);
       set((state) => ({ users: [data, ...state.users], loading: false }));
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to create user" });
@@ -100,7 +100,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   updateUser: async (id, payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.put(`/admin/users/${id}`, payload);
+      const { data } = await API.put(`/api/admin/users/${id}`, payload);
       set((state) => ({
         users: state.users.map((user) => (user.id === id ? data : user)),
         loading: false
@@ -114,7 +114,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   deleteUser: async (id) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`/admin/users/${id}`);
+      await API.delete(`/api/admin/users/${id}`);
       set((state) => ({ users: state.users.filter((user) => user.id !== id), loading: false }));
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to delete user" });
@@ -125,7 +125,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   toggleUserStatus: async (id, isActive) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.patch(`/admin/users/${id}/status`, { isActive });
+      const { data } = await API.patch(`/api/admin/users/${id}/status`, { isActive });
       set((state) => ({ users: state.users.map((user) => (user.id === id ? data : user)), loading: false }));
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to update status" });
@@ -136,7 +136,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchTests: async () => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get("/tests");
+      const { data } = await API.get("/api/tests");
       set({ tests: data.map((item: any) => ({ ...item, price: Number(item.price) })), loading: false });
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to load tests" });
@@ -147,7 +147,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   createTest: async (payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.post("/tests", payload);
+      const { data } = await API.post("/api/tests", payload);
       set((state) => ({ tests: [...state.tests, { ...data, price: Number(data.price) }], loading: false }));
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to create test" });
@@ -158,7 +158,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   updateTest: async (id, payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.put(`/tests/${id}`, payload);
+      const { data } = await API.put(`/api/tests/${id}`, payload);
       set((state) => ({
         tests: state.tests.map((test) => (test.id === id ? { ...data, price: Number(data.price) } : test)),
         loading: false
@@ -172,7 +172,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   deleteTest: async (id) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`/tests/${id}`);
+      await API.delete(`/api/tests/${id}`);
       set((state) => ({ tests: state.tests.filter((test) => test.id !== id), loading: false }));
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to delete test" });
@@ -183,7 +183,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchOrders: async () => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get("/admin/orders");
+      const { data } = await API.get("/api/admin/orders");
       set({ orders: data.map((item: any) => normalizeOrder(item)), loading: false });
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to load orders" });
@@ -194,7 +194,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchPayments: async (filters) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get("/admin/payments", {
+      const { data } = await API.get("/api/admin/payments", {
         params: {
           ...(filters?.status && filters.status !== "ALL" ? { status: filters.status } : {}),
           ...(filters?.startDate ? { startDate: filters.startDate } : {}),
@@ -215,7 +215,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchReports: async (status = "ALL") => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get("/admin/reports", {
+      const { data } = await API.get("/api/admin/reports", {
         params: {
           ...(status !== "ALL" ? { status } : {})
         }
@@ -230,7 +230,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchSettings: async () => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.get("/admin/settings");
+      const { data } = await API.get("/api/admin/settings");
       set({ settings: data, loading: false });
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to load settings" });
@@ -241,7 +241,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   updateSettings: async (settings) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.put("/admin/settings", settings);
+      const { data } = await API.put("/api/admin/settings", settings);
       set({ settings: data.settings, loading: false });
     } catch (error: any) {
       set({ loading: false, error: error?.response?.data?.message || "Failed to update settings" });

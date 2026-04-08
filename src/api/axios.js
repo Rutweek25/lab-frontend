@@ -1,15 +1,15 @@
 import axios from "axios";
-import { API_URL } from "./runtimeConfig";
 
-export const api = axios.create({
-  baseURL: API_URL,
-  timeout: 10000
+const API = axios.create({
+  baseURL: "https://lab-backend-e3ux.onrender.com"
 });
 
-api.interceptors.request.use((config) => {
+API.interceptors.request.use((config) => {
   const token = localStorage.getItem("lab_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
+
+export default API;

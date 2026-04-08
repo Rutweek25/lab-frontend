@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { api } from "../lib/api";
+import API from "../api/axios";
 import type { Role, User } from "../types";
 import { refreshSocketAuth } from "../lib/socket";
 
@@ -36,7 +36,7 @@ export const useAuthStore = create<AuthState>()(
       login: async (email, password, role) => {
         set({ loading: true });
         try {
-          const { data } = await api.post("/auth/login", { email, password, role });
+          const { data } = await API.post("/api/auth/login", { email, password, role });
           localStorage.setItem("lab_token", data.token);
           refreshSocketAuth();
           set({ user: data.user, token: data.token });
@@ -47,7 +47,7 @@ export const useAuthStore = create<AuthState>()(
       register: async (payload) => {
         set({ loading: true });
         try {
-          const { data } = await api.post("/auth/register", payload);
+          const { data } = await API.post("/api/auth/register", payload);
           return { email: data.email, otpPreview: data.otpPreview };
         } finally {
           set({ loading: false });
@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>()(
       verifyRegistrationOtp: async (email, otp) => {
         set({ loading: true });
         try {
-          await api.post("/auth/verify-otp", { email, otp });
+          await API.post("/api/auth/verify-otp", { email, otp });
         } finally {
           set({ loading: false });
         }
@@ -64,7 +64,7 @@ export const useAuthStore = create<AuthState>()(
       resendRegistrationOtp: async (email) => {
         set({ loading: true });
         try {
-          const { data } = await api.post("/auth/resend-otp", { email });
+          const { data } = await API.post("/api/auth/resend-otp", { email });
           return { otpPreview: data.otpPreview };
         } finally {
           set({ loading: false });

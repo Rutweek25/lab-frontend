@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { api } from "../lib/api";
+import API from "../api/axios";
 import type { PaymentStatusRow } from "../types";
 
 interface PaymentState {
@@ -27,7 +27,7 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const { statusFilter, search } = get();
-      const { data } = await api.get("/payments", {
+      const { data } = await API.get("/api/payments", {
         params: {
           ...(statusFilter !== "ALL" ? { status: statusFilter } : {}),
           ...(search.trim() ? { search: search.trim() } : {})

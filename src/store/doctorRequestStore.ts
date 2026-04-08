@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { api } from "../lib/api";
+import API from "../api/axios";
 import type { Order, Patient, TestItem } from "../types";
 
 interface CreatePatientPayload {
@@ -62,9 +62,9 @@ export const useDoctorRequestStore = create<DoctorRequestState>((set) => ({
     set({ loading: true, error: null });
     try {
       const [patientsRes, testsRes, ordersRes] = await Promise.all([
-        api.get("/patients", { params: { search, page: 1, pageSize: 100 } }),
-        api.get("/tests"),
-        api.get("/orders", { params: { search, page: 1, pageSize: 100 } })
+        API.get("/api/patients", { params: { search, page: 1, pageSize: 100 } }),
+        API.get("/api/tests"),
+        API.get("/api/orders", { params: { search, page: 1, pageSize: 100 } })
       ]);
 
       set({
@@ -85,7 +85,7 @@ export const useDoctorRequestStore = create<DoctorRequestState>((set) => ({
   createPatientWithOrder: async (payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.post("/patients-with-order", payload);
+      const { data } = await API.post("/api/patients-with-order", payload);
       set((state) => ({
         loading: false,
         patients: data?.lists?.patients ?? state.patients,
@@ -105,7 +105,7 @@ export const useDoctorRequestStore = create<DoctorRequestState>((set) => ({
   createOrderForExisting: async (payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.post("/orders", payload);
+      const { data } = await API.post("/api/orders", payload);
       set((state) => ({
         loading: false,
         requests: data?.lists?.requests
@@ -124,7 +124,7 @@ export const useDoctorRequestStore = create<DoctorRequestState>((set) => ({
   updatePatient: async (patientId, payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.put(`/patients/${patientId}`, payload);
+      const { data } = await API.put(`/api/patients/${patientId}`, payload);
       set((state) => {
         const nextPatients: Patient[] = data?.patients ?? state.patients.map((p) => (p.id === patientId ? { ...p, ...payload } : p));
         return {
@@ -146,7 +146,7 @@ export const useDoctorRequestStore = create<DoctorRequestState>((set) => ({
     set({ loading: true, error: null });
     try {
       const token = localStorage.getItem("lab_token");
-      const { data } = await api.delete(`/patients/${patientId}`, {
+      const { data } = await API.delete(`/api/patients/${patientId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined
       });
       set((state) => ({
@@ -166,7 +166,7 @@ export const useDoctorRequestStore = create<DoctorRequestState>((set) => ({
   deleteOrder: async (orderId) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.delete(`/orders/${orderId}`);
+      const { data } = await API.delete(`/api/orders/${orderId}`);
       set((state) => ({
         loading: false,
         requests: data?.lists?.requests
@@ -185,7 +185,7 @@ export const useDoctorRequestStore = create<DoctorRequestState>((set) => ({
   updateRequest: async (orderId, payload) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await api.put(`/orders/${orderId}`, payload);
+      const { data } = await API.put(`/api/orders/${orderId}`, payload);
       set((state) => ({
         loading: false,
         requests: data?.lists?.requests

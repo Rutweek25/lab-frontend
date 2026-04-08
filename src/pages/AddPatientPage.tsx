@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
-import { api } from "../lib/api";
+import API from "../api/axios";
 import { PageHeader } from "../components/PageHeader";
 
 export const AddPatientPage = () => {
@@ -27,7 +27,7 @@ export const AddPatientPage = () => {
     setLoading(true);
 
     try {
-      await api.post("/patients", {
+      await API.post("/api/patients", {
         name,
         phone,
         age: Number(age),

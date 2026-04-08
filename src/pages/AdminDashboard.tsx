@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Pie, PieChart, ResponsiveContainer, Tooltip, Cell, Legend } from "recharts";
 import toast from "react-hot-toast";
-import { api } from "../lib/api";
+import API from "../api/axios";
 import { PageHeader } from "../components/PageHeader";
 import { Loader } from "../components/Loader";
 import type { User } from "../types";
@@ -17,8 +17,8 @@ export const AdminDashboard = () => {
     setLoading(true);
     try {
       const [summaryRes, usersRes] = await Promise.all([
-        api.get("/admin/summary"),
-        api.get("/admin/users")
+        API.get("/api/admin/summary"),
+        API.get("/api/admin/users")
       ]);
       setSummary(summaryRes.data);
       setUsers(usersRes.data);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import toast from "react-hot-toast";
-import { api } from "../lib/api";
+import API from "../api/axios";
 import { EmptyState } from "../components/EmptyState";
 import { PageHeader } from "../components/PageHeader";
 import { Skeleton } from "../components/Skeleton";
@@ -25,7 +25,7 @@ export const ReportsPage = () => {
     if (!id) return;
     setLoading(true);
     try {
-      const { data } = await api.get(`/reports/${id}`);
+      const { data } = await API.get(`/api/reports/${id}`);
       setReports(data);
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to fetch reports");
@@ -72,7 +72,7 @@ export const ReportsPage = () => {
 
     try {
       setUploading(true);
-      await api.post(`/reports/${orderId}`, formData, {
+      await API.post(`/api/reports/${orderId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
       toast.success("Report uploaded");
