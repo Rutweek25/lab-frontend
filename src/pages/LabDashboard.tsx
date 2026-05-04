@@ -60,7 +60,6 @@ export const LabDashboard = () => {
   }, [fetchLabData]);
 
   useEffect(() => {
-    socket.connect();
     const refresh = () => {
       fetchLabData().catch(() => undefined);
     };
@@ -76,8 +75,7 @@ export const LabDashboard = () => {
       socket.off("order:updated", refresh);
       socket.off("payment:updated", refresh);
       socket.off("report:uploaded", refresh);
-      socket.off("notification:new");
-      socket.disconnect();
+      socket.off("notification:new", refresh);
     };
   }, [fetchLabData]);
 

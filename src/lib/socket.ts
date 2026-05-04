@@ -9,7 +9,14 @@ export const socket = io(SOCKET_URL, {
 });
 
 export const refreshSocketAuth = () => {
+  const wasConnected = socket.connected;
   socket.auth = {
     token: localStorage.getItem("lab_token") || ""
   };
+
+  // If auth changes while connected, reconnect so rooms are rejoined with fresh token.
+  if (wasConnected) {
+    socket.disconnect();
+    socket.connect();
+  }
 };

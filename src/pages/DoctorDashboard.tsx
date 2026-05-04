@@ -157,7 +157,6 @@ export const DoctorDashboard = () => {
   }, [fetchData]);
 
   useEffect(() => {
-    socket.connect();
     const syncDashboard = () => {
       fetchData(search).catch(() => {
         // no-op
@@ -176,7 +175,6 @@ export const DoctorDashboard = () => {
       socket.off("payment:updated", syncDashboard);
       socket.off("report:uploaded", syncDashboard);
       socket.off("notification:new", syncDashboard);
-      socket.disconnect();
     };
   }, [fetchData, search]);
 

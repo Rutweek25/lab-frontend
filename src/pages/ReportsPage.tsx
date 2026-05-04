@@ -39,7 +39,6 @@ export const ReportsPage = () => {
   }, [orderId]);
 
   useEffect(() => {
-    socket.connect();
     const onReport = () => {
       if (orderId) {
         fetchReports(orderId);
@@ -50,8 +49,7 @@ export const ReportsPage = () => {
 
     return () => {
       socket.off("report:uploaded", onReport);
-      socket.off("notification:new");
-      socket.disconnect();
+      socket.off("notification:new", onReport);
     };
   }, [orderId]);
 
